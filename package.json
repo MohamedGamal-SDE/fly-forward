@@ -7,21 +7,32 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "flights-server"
   },
   "dependencies": {
+    "@tanstack/react-table": "^8.19.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@musalasoft/flights-server": "^1.0.12",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
     "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.19",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
+    "lucide-react": "^0.399.0",
+    "postcss": "^8.4.39",
+    "tailwind-merge": "^2.3.0",
+    "tailwindcss": "^3.4.4",
+    "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.2.2",
     "vite": "^5.3.1"
   }
