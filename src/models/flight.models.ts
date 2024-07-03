@@ -13,3 +13,9 @@ export interface FlightImg {
 }
 
 export type FlightStatus = 'none' | 'ready' | 'processing';
+
+export interface FlightsResponse {
+  count: number;
+  resources: Flight[];
+  total: number;
+}
