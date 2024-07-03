@@ -7,7 +7,8 @@ const apiUrl = `${import.meta.env.VITE_API_URL}/flights`;
 
 export const fetchFlights = async (): Promise<Flight[]> => {
   try {
-    const response = await axios.get<FlightsResponse>(apiUrl);
+    // TODO: Implement dynamic size and page setup
+    const response = await axios.get<FlightsResponse>(`${apiUrl}?size=20`);
 
     return response.data.resources;
   } catch (error) {

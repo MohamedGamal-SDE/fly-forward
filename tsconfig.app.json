@@ -26,7 +26,8 @@
     // Addition:
     "paths": {
       "@/*": ["./src/*"],
-      "@/components": ["./src/components/index.ts"]
+      "@/components": ["./src/components/index.ts"],
+      "@/shadcn": ["./src/shadcn/index.ts"]
     }
   },
   "include": ["src"]
