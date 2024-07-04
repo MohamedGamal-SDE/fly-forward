@@ -14,11 +14,21 @@ interface DataTablePaginationProps<TData> {
 
 export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
   // TODO: Extract const data to constant file
-  return (
-    <div className="flex items-center justify-between px-2">
+
+  const renderFilteredSelectedRow = () => {
+    if (!table.getFilteredSelectedRowModel() || table.getFilteredSelectedRowModel().rows.length <= 0) return;
+
+    return (
       <div className="flex-1 text-sm text-muted-foreground">
         {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s) selected.
       </div>
+    );
+  };
+
+  return (
+    <div className={`flex items-center px-2 ${renderFilteredSelectedRow() ? 'justify-between' : 'justify-end'}`}>
+      {renderFilteredSelectedRow()}
+
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
           <p className="text-sm font-medium">Rows per page</p>
