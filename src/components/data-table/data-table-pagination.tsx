@@ -1,12 +1,7 @@
 import { ChevronLeftIcon, ChevronRightIcon, ChevronFirstIcon, ChevronLastIcon } from 'lucide-react';
-import { Table } from '@tanstack/react-table';
-
 import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shadcn';
 
-interface DataTablePaginationProps<TData> {
-  table: Table<TData>;
-  pageSizes?: number[];
-}
+import { DataTablePaginationProps } from '@/models/table.modes';
 
 export function DataTablePagination<TData>({ table, pageSizes = [10, 20, 30, 40, 50] }: DataTablePaginationProps<TData>) {
   // TODO: Extract const data to constant file

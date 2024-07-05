@@ -1,22 +1,11 @@
-import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
+import { flexRender } from '@tanstack/react-table';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shadcn';
-import { DataTablePagination } from './data-table-pagination';
+import { DataTableProps } from '@/models/table.modes';
 
 // TODO: Move to models after component prep done
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-}
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-  });
-
+export function DataTable<TData>({ table }: DataTableProps<TData>) {
   return (
     <>
       <div className="border p-1 bg-slate-100">
@@ -41,7 +30,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell colSpan={table.getAllColumns().length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
@@ -49,8 +38,6 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           </TableBody>
         </Table>
       </div>
-
-      <DataTablePagination table={table} />
     </>
   );
 }
