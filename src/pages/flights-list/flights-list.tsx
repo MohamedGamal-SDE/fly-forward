@@ -1,9 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useReactTable, getCoreRowModel, getPaginationRowModel, Table } from '@tanstack/react-table';
 
-import { DataTable } from '@/components';
+import { createMockFlightItem, fetchFlights } from '@/api';
+import { DataTable, DataTablePagination } from '@/components';
 import { Flight } from '@/models';
 import { flightListTableColumns } from './table-columns';
-import { createMockFlightItem, fetchFlights } from '@/api';
 
 const FLIGHTS_QUERY_KEY = 'flights';
 
@@ -28,6 +29,13 @@ export default function FlightsList() {
     },
   });
 
+  const table: Table<Flight> = useReactTable({
+    data: flightsList || [],
+    columns: flightListTableColumns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  });
+
   const handleAddMockFlightClick = () => {
     mutations.mutate(flightsList || []);
   };
@@ -43,7 +51,8 @@ export default function FlightsList() {
         </button>
       </div>
 
-      <DataTable columns={flightListTableColumns} data={flightsList || []} />
+      <DataTable table={table} />
+      <DataTablePagination table={table} />
     </div>
   );
 }
