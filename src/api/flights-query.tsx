@@ -1,20 +1,52 @@
 import axios from 'axios';
 
-import { Flight, FlightsResponse } from '@/models';
+import { Flight, FlightPaginatedFetchProps, FlightsResponse } from '@/models';
 import { generateRandomFlight } from '@/utilities';
 
 const apiUrl = `${import.meta.env.VITE_API_URL}/flights`;
 
-export const fetchFlights = async (): Promise<Flight[]> => {
+export const fetchAllFlights = async (): Promise<Flight[]> => {
   try {
     // TODO: Implement dynamic size and page setup
-    const response = await axios.get<FlightsResponse>(`${apiUrl}?size=20`);
+    const response = await axios.get<FlightsResponse>(`${apiUrl}`);
+    console.log('🚀 ~ fetchAllFlights ~ response.data:', response.data);
 
     return response.data.resources;
   } catch (error) {
     // DEV:RMV: For dev debug purpose only!!!
     console.warn('❌ Error Fetching data:', error);
     return [];
+  }
+};
+
+export const fetchPaginatedFlights = async (queryParams: FlightPaginatedFetchProps): Promise<FlightsResponse> => {
+  const { page, pageSize } = queryParams;
+
+  try {
+    // await new Promise((r) => setTimeout(r, 500)); // RMV:
+
+    const response = await axios.get<FlightsResponse>(apiUrl, {
+      params: {
+        page,
+        size: pageSize,
+      },
+    });
+
+    // RMV:
+    // console.log(
+    //   `🚀 ~ fetchPaginatedFlights ~ url with paginated parameters ~
+    //   ${apiUrl}?page=${page}&size=${pageSize}`
+    // );
+
+    return response.data;
+  } catch (error) {
+    // DEV:RMV: For dev debug purpose only!!!
+    console.warn(`❌ Error Fetching Page ${page} data:`, error);
+    return {
+      total: 0,
+      count: 0,
+      resources: [],
+    };
   }
 };
 

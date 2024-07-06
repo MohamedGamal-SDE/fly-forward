@@ -1,26 +1,38 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useReactTable, getCoreRowModel, getPaginationRowModel, Table } from '@tanstack/react-table';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useReactTable, getCoreRowModel, Table, PaginationState } from '@tanstack/react-table';
 
-import { createMockFlightItem, fetchFlights } from '@/api';
+import { createMockFlightItem, fetchPaginatedFlights } from '@/api';
 import { DataTable, DataTablePagination } from '@/components';
-import { Flight } from '@/models';
+import { Flight, FlightsResponse } from '@/models';
 import { flightListTableColumns } from './table-columns';
+import { useMemo, useState } from 'react';
 
 const FLIGHTS_QUERY_KEY = 'flights';
 
 export default function FlightsList() {
   const queryClient = useQueryClient();
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0, // Zero-based index to match tanstack default
+    pageSize: 10,
+  });
 
   // TODO: Extract queries and mutations into reusable custom hook
   const {
-    data: flightsList,
+    data: flightsData,
     error,
-    isLoading,
-  } = useQuery<Flight[], Error>({
-    queryKey: [FLIGHTS_QUERY_KEY],
-    queryFn: fetchFlights,
+    isPending,
+    isFetching,
+    // isLoading,
+    // isPlaceholderData,
+  } = useQuery<FlightsResponse, Error>({
+    queryKey: [FLIGHTS_QUERY_KEY, pagination],
+    queryFn: () => fetchPaginatedFlights({ page: pagination.pageIndex + 1, pageSize: pagination.pageSize }), // Adjust page for API (1-based)
+    placeholderData: keepPreviousData, // NOTE: Prevent 0 rows flash while changing pages/loading next page
   });
 
+  const { resources: flightsList } = flightsData ?? {};
+
+  // DEV: Create mock flight
   const mutations = useMutation({
     mutationFn: createMockFlightItem,
     onSuccess() {
@@ -29,18 +41,42 @@ export default function FlightsList() {
     },
   });
 
+  // DEV: Table setup
+  const optimizedColumns = useMemo(() => flightListTableColumns, []);
+  const defaultData = useMemo(() => [], []);
+
   const table: Table<Flight> = useReactTable({
-    data: flightsList || [],
-    columns: flightListTableColumns,
+    data: flightsList || defaultData,
+    columns: optimizedColumns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    // getPaginationRowModel: getPaginationRowModel(),
+    // debugTable: true,
+    manualPagination: true,
+    pageCount: Math.ceil((flightsData?.total || 0) / pagination.pageSize), // Calculate the total number of pages
+    state: { pagination },
+    onPaginationChange: setPagination,
   });
 
   const handleAddMockFlightClick = () => {
     mutations.mutate(flightsList || []);
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  // DEV:IDEA:
+  // Prefetch next page:
+  // useEffect(() => {
+  //   if (!isPlaceholderData && flightsList?.hasMore) {
+  //     queryClient.prefetchQuery({
+  //       queryKey: ['projects', page + 1],
+  //       queryFn: () => fetchPaginatedFlights({ page: page + 1, pageSize }),
+  //     });
+  //   }
+  // }, [data, isPlaceholderData, page, queryClient]);
+
+  // NOTE: Docs user isPending instead of isLoading for paginated fetch
+  if (isPending) return <div>Loading...</div>;
+  // if (isLoading) return <div>Loading...</div>;
+  if (isFetching) return <div>Fetching...</div>;
+
   if (error) return <div>Something went wrong, please try again later</div>;
 
   return (

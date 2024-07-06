@@ -21,3 +21,8 @@ export interface FlightsResponse {
   resources: Flight[];
   total: number;
 }
+
+export interface FlightPaginatedFetchProps {
+  page: number;
+  pageSize: number;
+}
