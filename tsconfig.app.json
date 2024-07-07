@@ -24,10 +24,12 @@
     "noFallthroughCasesInSwitch": true,
 
     // Addition:
+    /* Base URL and Paths */
+    "baseUrl": "./",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/components": ["./src/components/index.ts"],
-      "@/shadcn": ["./src/shadcn/index.ts"]
+      "@/*": ["src/*"],
+      "@/components": ["src/components/index.ts"],
+      "@/shadcn": ["src/shadcn/index.ts"]
     }
   },
   "include": ["src"]
