@@ -1,3 +1,5 @@
+import { useEffect, useMemo, useState } from 'react';
+import { getRouteApi } from '@tanstack/react-router';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useReactTable, getCoreRowModel, Table, PaginationState } from '@tanstack/react-table';
 
@@ -5,16 +7,31 @@ import { createMockFlightItem, fetchPaginatedFlights } from '@/api';
 import { DataTable, DataTablePagination } from '@/components';
 import { Flight, FlightsResponse } from '@/models';
 import { flightListTableColumns } from './table-columns';
-import { useMemo, useState } from 'react';
 
+const route = getRouteApi('/flights');
 const FLIGHTS_QUERY_KEY = 'flights';
 
 export default function FlightsList() {
   const queryClient = useQueryClient();
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0, // Zero-based index to match tanstack default
-    pageSize: 10,
-  });
+  const navigate = route.useNavigate();
+  const queryParams = route.useSearch();
+
+  // NOTE:
+  //      - pageIndex: we adjust page to a 0-based index
+  //      - to match tanstack default pagination setup
+  //      - adjust fetching params for page to API (1-based)
+
+  const pageIndex = (queryParams.page || 1) - 1;
+  const pageSize = queryParams.size || 10;
+
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex, pageSize });
+
+  useEffect(() => {
+    navigate({
+      to: '/flights',
+      search: { page: pagination.pageIndex + 1, size: pagination.pageSize },
+    });
+  }, [pagination, navigate]);
 
   // TODO: Extract queries and mutations into reusable custom hook
   const {
@@ -26,7 +43,7 @@ export default function FlightsList() {
     // isPlaceholderData,
   } = useQuery<FlightsResponse, Error>({
     queryKey: [FLIGHTS_QUERY_KEY, pagination],
-    queryFn: () => fetchPaginatedFlights({ page: pagination.pageIndex + 1, pageSize: pagination.pageSize }), // Adjust page for API (1-based)
+    queryFn: () => fetchPaginatedFlights({ page: pagination.pageIndex + 1, pageSize: pagination.pageSize }),
     placeholderData: keepPreviousData, // NOTE: Prevent 0 rows flash while changing pages/loading next page
   });
 
