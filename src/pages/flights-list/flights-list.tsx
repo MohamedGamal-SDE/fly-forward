@@ -27,7 +27,7 @@ export default function FlightsList() {
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex, pageSize });
 
   useEffect(() => {
-    if (isNaN(pagination.pageIndex) || isNaN(pagination.pageSize) || pagination.pageIndex < 1 || pagination.pageSize < 1) {
+    if (isNaN(pagination.pageIndex) || isNaN(pagination.pageSize) || pagination.pageIndex < 0 || pagination.pageSize < 1) {
       navigate({
         to: '/bad-request',
       });
