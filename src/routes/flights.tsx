@@ -11,9 +11,9 @@ export const Route = createFileRoute('/flights')({
   component: FlightsList,
   // TODO: Try out https://zod.dev/ typing
   validateSearch: (search: Record<string, unknown>): FlightsQueryParams => {
-    return {
-      page: Number(search?.page ?? 1),
-      size: Number(search?.size ?? 10),
-    };
+    const page = Number(search?.page ?? 1);
+    const size = Number(search?.size ?? 10);
+
+    return { page, size };
   },
 });
