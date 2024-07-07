@@ -11,13 +11,25 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as NotFoundImport } from './routes/not-found'
 import { Route as FlightsImport } from './routes/flights'
+import { Route as BadRequestImport } from './routes/bad-request'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
 
+const NotFoundRoute = NotFoundImport.update({
+  path: '/not-found',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const FlightsRoute = FlightsImport.update({
   path: '/flights',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const BadRequestRoute = BadRequestImport.update({
+  path: '/bad-request',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -37,6 +49,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/bad-request': {
+      id: '/bad-request'
+      path: '/bad-request'
+      fullPath: '/bad-request'
+      preLoaderRoute: typeof BadRequestImport
+      parentRoute: typeof rootRoute
+    }
     '/flights': {
       id: '/flights'
       path: '/flights'
@@ -44,12 +63,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FlightsImport
       parentRoute: typeof rootRoute
     }
+    '/not-found': {
+      id: '/not-found'
+      path: '/not-found'
+      fullPath: '/not-found'
+      preLoaderRoute: typeof NotFoundImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren({ IndexRoute, FlightsRoute })
+export const routeTree = rootRoute.addChildren({
+  IndexRoute,
+  BadRequestRoute,
+  FlightsRoute,
+  NotFoundRoute,
+})
 
 /* prettier-ignore-end */
 
@@ -60,14 +91,22 @@ export const routeTree = rootRoute.addChildren({ IndexRoute, FlightsRoute })
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/flights"
+        "/bad-request",
+        "/flights",
+        "/not-found"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
+    "/bad-request": {
+      "filePath": "bad-request.tsx"
+    },
     "/flights": {
       "filePath": "flights.tsx"
+    },
+    "/not-found": {
+      "filePath": "not-found.tsx"
     }
   }
 }

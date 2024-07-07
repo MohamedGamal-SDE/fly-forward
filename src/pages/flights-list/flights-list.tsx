@@ -21,16 +21,22 @@ export default function FlightsList() {
   //      - to match tanstack default pagination setup
   //      - adjust fetching params for page to API (1-based)
 
-  const pageIndex = (queryParams.page || 1) - 1;
-  const pageSize = queryParams.size || 10;
+  const pageIndex = queryParams.page - 1;
+  const pageSize = queryParams.size;
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex, pageSize });
 
   useEffect(() => {
-    navigate({
-      to: '/flights',
-      search: { page: pagination.pageIndex + 1, size: pagination.pageSize },
-    });
+    if (isNaN(pagination.pageIndex) || isNaN(pagination.pageSize) || pagination.pageIndex < 1 || pagination.pageSize < 1) {
+      navigate({
+        to: '/bad-request',
+      });
+    } else {
+      navigate({
+        to: '/flights',
+        search: { page: pagination.pageIndex + 1, size: pagination.pageSize },
+      });
+    }
   }, [pagination, navigate]);
 
   // TODO: Extract queries and mutations into reusable custom hook
