@@ -1,7 +1,7 @@
 import { flexRender } from '@tanstack/react-table';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shadcn';
-import { DataTableProps } from '@/models/table.modes';
+import { DataTableProps } from '@/models/table.models';
 
 // TODO: Move to models after component prep done
 

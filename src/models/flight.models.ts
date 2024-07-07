@@ -1,28 +1,30 @@
-export interface FlightRequest {
-  code: string; // unique & 6 characters long & only uppercase or lowercase letters
-  capacity: number; // between 1 and 200
-  departureDate: string;
-}
+// RMV: Remove after testing zod models
 
-export interface Flight extends FlightRequest {
-  id: string; // uuid
-  status: FlightStatus;
-  img: string;
-}
+// export interface FlightRequest {
+//   code: string; // unique & 6 characters long & only uppercase or lowercase letters
+//   capacity: number; // between 1 and 200
+//   departureDate: string;
+// }
 
-export enum FlightStatus {
-  NONE = 'none',
-  READY = 'ready',
-  PROCESSING = 'processing',
-}
+// export interface Flight extends FlightRequest {
+//   id: string; // uuid
+//   status: FlightStatus;
+//   img: string;
+// }
 
-export interface FlightsResponse {
-  count: number;
-  resources: Flight[];
-  total: number;
-}
+// export enum FlightStatus {
+//   NONE = 'none',
+//   READY = 'ready',
+//   PROCESSING = 'processing',
+// }
 
-export interface FlightPaginatedFetchProps {
-  page: number;
-  pageSize: number;
-}
+// export interface FlightsResponse {
+//   count: number;
+//   resources: Flight[];
+//   total: number;
+// }
+
+// export interface FlightPaginatedFetchProps {
+//   page: number;
+//   pageSize: number;
+// }

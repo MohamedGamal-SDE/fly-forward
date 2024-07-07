@@ -1,7 +1,7 @@
 import { ChevronLeftIcon, ChevronRightIcon, ChevronFirstIcon, ChevronLastIcon } from 'lucide-react';
 import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shadcn';
 
-import { DataTablePaginationProps } from '@/models/table.modes';
+import { DataTablePaginationProps } from '@/models/table.models';
 
 export function DataTablePagination<TData>({ table, pageSizes = [10, 20, 30, 40, 50] }: DataTablePaginationProps<TData>) {
   // TODO: Extract const data to constant file
