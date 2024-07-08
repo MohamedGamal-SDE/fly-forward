@@ -1,5 +1,5 @@
 import { createRootRoute, Link, Outlet } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/router-devtools';
+// import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 
 export const Route = createRootRoute({
   component: () => (
@@ -10,11 +10,14 @@ export const Route = createRootRoute({
         </Link>{' '}
         <Link to="/flights" className="[&.active]:font-bold" search={(params) => ({ ...params, page: params.page || 1, size: params.size || 10 })}>
           Flights
+        </Link>{' '}
+        <Link to="/add-flight" className="[&.active]:font-bold">
+          Add Flight
         </Link>
       </div>
       <hr />
       <Outlet />
-      <TanStackRouterDevtools />
+      {/* <TanStackRouterDevtools /> */}
     </>
   ),
 });

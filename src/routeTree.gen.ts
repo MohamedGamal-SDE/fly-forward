@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as NotFoundImport } from './routes/not-found'
 import { Route as FlightsImport } from './routes/flights'
 import { Route as BadRequestImport } from './routes/bad-request'
+import { Route as AddFlightImport } from './routes/add-flight'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
@@ -33,6 +34,11 @@ const BadRequestRoute = BadRequestImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AddFlightRoute = AddFlightImport.update({
+  path: '/add-flight',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
@@ -47,6 +53,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/add-flight': {
+      id: '/add-flight'
+      path: '/add-flight'
+      fullPath: '/add-flight'
+      preLoaderRoute: typeof AddFlightImport
       parentRoute: typeof rootRoute
     }
     '/bad-request': {
@@ -77,6 +90,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
+  AddFlightRoute,
   BadRequestRoute,
   FlightsRoute,
   NotFoundRoute,
@@ -91,6 +105,7 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/add-flight",
         "/bad-request",
         "/flights",
         "/not-found"
@@ -98,6 +113,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/add-flight": {
+      "filePath": "add-flight.tsx"
     },
     "/bad-request": {
       "filePath": "bad-request.tsx"
