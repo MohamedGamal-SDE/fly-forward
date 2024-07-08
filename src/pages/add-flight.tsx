@@ -15,7 +15,7 @@ export default function AddFlight() {
 
   const watchCapacity = form.watch('capacity', 0);
 
-  const { mutate, isPending, isError } = useCreateFlightMutation();
+  const { mutate, isPending, isError, isSuccess } = useCreateFlightMutation();
 
   // 2. Define a submit handler.
   function onSubmit(values: FlightRequest) {
@@ -87,7 +87,8 @@ export default function AddFlight() {
           </Button>
         </div>
 
-        {isError && <p>Add Flight failed, please try again.</p>}
+        {isSuccess && <p className="p-2 bg-green-200  w-full text-green-800">Flight Created successfully</p>}
+        {isError && <p className="p-2 bg-red-200 w-full text-red-800">Add Flight failed, please try again.</p>}
       </form>
     </Form>
   );
