@@ -3,11 +3,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { Button, Input, Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shadcn/components';
-import { useCreateFlightMutation } from '@/hooks';
+import { useCreateFlightMutation, useFetchFlights } from '@/hooks';
 import axios from 'axios';
+import { isCodeUnique } from '@/utilities';
 
 export default function AddFlight() {
-  // 1. Define your form.
+  const { data: flightsList, isFetched, isError: isFetchingFlightsError } = useFetchFlights();
+
+  // Form Instance
   const form = useForm<FlightRequest>({
     resolver: zodResolver(flightRequestSchema),
     defaultValues: { code: '', capacity: 0, departureDate: '' },
@@ -15,11 +18,18 @@ export default function AddFlight() {
 
   const watchCapacity = form.watch('capacity', 0);
 
-  const { mutate, isPending, isError, isSuccess } = useCreateFlightMutation();
+  const { mutateAsync, isPending, isError, isSuccess } = useCreateFlightMutation();
 
-  // 2. Define a submit handler.
-  function onSubmit(values: FlightRequest) {
-    mutate(values, {
+  // Handle form submission
+  async function onSubmit(values: FlightRequest) {
+    if (!isFetched || isFetchingFlightsError) return;
+
+    if (!isCodeUnique(values.code, flightsList ?? [])) {
+      form.setError('code', { type: 'manual', message: 'The flight code is already in use. Please choose a different code.' });
+      return;
+    }
+
+    await mutateAsync(values, {
       onError: (error) => {
         if (axios.isAxiosError(error)) {
           if (error.response?.data.code === 106) {
@@ -87,8 +97,9 @@ export default function AddFlight() {
           </Button>
         </div>
 
+        {/* Simple notifications */}
         {isSuccess && <p className="p-2 bg-green-200  w-full text-green-800">Flight Created successfully</p>}
-        {isError && <p className="p-2 bg-red-200 w-full text-red-800">Add Flight failed, please try again.</p>}
+        {(isError || isFetchingFlightsError) && <p className="p-2 bg-red-200 w-full text-red-800">Add Flight failed, please try again.</p>}
       </form>
     </Form>
   );
