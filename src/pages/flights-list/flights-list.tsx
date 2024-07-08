@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { getRouteApi } from '@tanstack/react-router';
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useReactTable, getCoreRowModel, Table, PaginationState } from '@tanstack/react-table';
 
-import { createMockFlightItem, fetchPaginatedFlights } from '@/api';
+import { createMockFlightItem } from '@/api';
 import { DataTable, DataTablePagination } from '@/components';
-import { Flight, FlightsResponse } from '@/models';
+import { Flight } from '@/models';
 import { flightListTableColumns } from './table-columns';
+import { useFetchPaginatedFlights } from '@/hooks';
 
 const route = getRouteApi('/flights');
 const FLIGHTS_QUERY_KEY = 'flights';
@@ -27,7 +28,7 @@ export default function FlightsList() {
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex, pageSize });
 
   useEffect(() => {
-    if (isNaN(pagination.pageIndex) || isNaN(pagination.pageSize) || pagination.pageIndex < 1 || pagination.pageSize < 1) {
+    if (isNaN(pagination.pageIndex) || isNaN(pagination.pageSize) || pagination.pageIndex < 0 || pagination.pageSize < 1) {
       navigate({
         to: '/bad-request',
       });
@@ -39,19 +40,7 @@ export default function FlightsList() {
     }
   }, [pagination, navigate]);
 
-  // TODO: Extract queries and mutations into reusable custom hook
-  const {
-    data: flightsData,
-    error,
-    isPending,
-    isFetching,
-    // isLoading,
-    // isPlaceholderData,
-  } = useQuery<FlightsResponse, Error>({
-    queryKey: [FLIGHTS_QUERY_KEY, pagination],
-    queryFn: () => fetchPaginatedFlights({ page: pagination.pageIndex + 1, pageSize: pagination.pageSize }),
-    placeholderData: keepPreviousData, // NOTE: Prevent 0 rows flash while changing pages/loading next page
-  });
+  const { data: flightsData, error, isPending, isFetching } = useFetchPaginatedFlights(pagination);
 
   const { resources: flightsList } = flightsData ?? {};
 
