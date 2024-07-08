@@ -23,6 +23,6 @@ export function generateRandomFlight(existingFlights: Flight[]): FlightRequest {
   };
 }
 // Check if the generated code is unique among existing flights
-function isCodeUnique(code: string, existingFlights: Flight[]): boolean {
+export function isCodeUnique(code: string, existingFlights: Flight[]): boolean {
   return !existingFlights.some((flight) => flight.code === code);
 }
