@@ -9,6 +9,10 @@ export const flightRequestSchema = z.object({
     .regex(/^[a-zA-Z]+$/, 'Code must contain only letters (a-z, A-Z).'),
   capacity: z.number().int('Capacity must be an integer.').min(1, 'Capacity must be at least 1.').max(200, 'Capacity must be at most 200.'),
   departureDate: z.string().refine((date) => !isNaN(Date.parse(date)), 'Invalid date format.'),
+  photo: z
+    .instanceof(File)
+    .refine((file) => file.type.startsWith('image/'), 'Only image files are allowed')
+    .optional(),
 });
 
 export const flightSchema = flightRequestSchema.extend({

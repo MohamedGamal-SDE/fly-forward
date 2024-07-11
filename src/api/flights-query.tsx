@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { Flight, FlightPaginatedFetchProps, FlightRequest, FlightsResponse } from '@/models';
+import { Flight, FlightPaginatedFetchProps, FlightsResponse } from '@/models';
 import { generateRandomFlight } from '@/utilities';
 
 const apiUrl = `${import.meta.env.VITE_API_URL}/flights`;
@@ -49,9 +49,9 @@ export const createMockFlightItem = async (flightsList: Flight[]) => {
   return mockFlight;
 };
 
-export const createFlight = async (flight: FlightRequest): Promise<Flight> => {
+export const createFlight = async (flight: FormData): Promise<Flight> => {
   try {
-    const response = await axios.post<Flight>(apiUrl, flight);
+    const response = await axios.post<Flight>(`${apiUrl}/withPhoto`, flight);
 
     return response.data;
   } catch (error) {
