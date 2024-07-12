@@ -1,19 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import { getRouteApi } from '@tanstack/react-router';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useReactTable, getCoreRowModel, Table, PaginationState } from '@tanstack/react-table';
 
-import { createMockFlightItem } from '@/api';
 import { DataTable, DataTablePagination } from '@/components';
 import { Flight } from '@/models';
 import { flightListTableColumns } from './table-columns';
 import { useFetchPaginatedFlights } from '@/hooks';
+import { FlightCard } from '@/components/flight-card';
 
 const route = getRouteApi('/flights');
-const FLIGHTS_QUERY_KEY = 'flights';
 
 export default function FlightsList() {
-  const queryClient = useQueryClient();
   const navigate = route.useNavigate();
   const queryParams = route.useSearch();
 
@@ -43,16 +40,6 @@ export default function FlightsList() {
   const { data: flightsData, error, isPending, isFetching } = useFetchPaginatedFlights(pagination);
 
   const { resources: flightsList } = flightsData ?? {};
-  // console.log('🚀 ~ FlightsList ~ flightsData:', flightsData);
-
-  // DEV: Create mock flight
-  const mutations = useMutation({
-    mutationFn: createMockFlightItem,
-    onSuccess() {
-      // Invalidate current flights list and refetch
-      queryClient.invalidateQueries({ queryKey: [FLIGHTS_QUERY_KEY] });
-    },
-  });
 
   // DEV: Table setup
   const optimizedColumns = useMemo(() => flightListTableColumns, []);
@@ -70,10 +57,6 @@ export default function FlightsList() {
     onPaginationChange: setPagination,
   });
 
-  const handleAddMockFlightClick = () => {
-    mutations.mutate(flightsList || []);
-  };
-
   // DEV:IDEA:
   // Prefetch next page:
   // useEffect(() => {
@@ -85,6 +68,34 @@ export default function FlightsList() {
   //   }
   // }, [data, isPlaceholderData, page, queryClient]);
 
+  // NOTE: Mobile view start from 0 to (sm: = 640px)
+  const renderTableView = () => {
+    return (
+      <div className="hidden sm:block">
+        <DataTable table={table} />
+        <DataTablePagination table={table} />
+      </div>
+    );
+  };
+
+  const renderCardView = () => {
+    const flights = flightsList || defaultData;
+    const cardsList = flights.map((flight) => {
+      return (
+        <div key={flight.id} className="">
+          <FlightCard data={flight} className="border border-spacing-1 border-orange-400" />
+        </div>
+      );
+    });
+
+    return (
+      <div className="sm:hidden flex flex-col gap-2 p-4">
+        {cardsList}
+        <DataTablePagination table={table} />
+      </div>
+    );
+  };
+
   // NOTE: Docs user isPending instead of isLoading for paginated fetch
   if (isPending) return <div>Loading...</div>;
   // if (isLoading) return <div>Loading...</div>;
@@ -94,14 +105,8 @@ export default function FlightsList() {
 
   return (
     <div>
-      <div className="flex p-4 items-center justify-center space-x-4 bg-slate-200">
-        <button onClick={handleAddMockFlightClick} className="flex-grow p-2 bg-blue-500 text-white">
-          Add mock flight
-        </button>
-      </div>
-
-      <DataTable table={table} />
-      <DataTablePagination table={table} />
+      {renderTableView()}
+      {renderCardView()}
     </div>
   );
 }
