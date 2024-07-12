@@ -68,6 +68,7 @@ export default function FlightsList() {
   //   }
   // }, [data, isPlaceholderData, page, queryClient]);
 
+  // NOTE: Mobile view start from 0 to (sm: = 640px)
   const renderTableView = () => {
     return (
       <div className="hidden sm:block">
@@ -81,13 +82,13 @@ export default function FlightsList() {
     const flights = flightsList || defaultData;
     const cardsList = flights.map((flight) => {
       return (
-        <div key={flight.id}>
-          <FlightCard data={flight} className="bg-orange-400" />
+        <div key={flight.id} className="">
+          <FlightCard data={flight} className="border border-spacing-1 border-orange-400" />
         </div>
       );
     });
 
-    return <div className="sm:hidden">{cardsList}</div>;
+    return <div className="sm:hidden flex flex-col gap-2 p-4">{cardsList}</div>;
   };
 
   // NOTE: Docs user isPending instead of isLoading for paginated fetch
