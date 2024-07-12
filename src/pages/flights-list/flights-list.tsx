@@ -43,6 +43,7 @@ export default function FlightsList() {
   const { data: flightsData, error, isPending, isFetching } = useFetchPaginatedFlights(pagination);
 
   const { resources: flightsList } = flightsData ?? {};
+  // console.log('🚀 ~ FlightsList ~ flightsData:', flightsData);
 
   // DEV: Create mock flight
   const mutations = useMutation({
