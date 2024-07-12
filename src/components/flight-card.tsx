@@ -9,7 +9,7 @@ export interface FlightCardProps {
   className: string;
 }
 
-export function CardDemo({ data, className, ...props }: FlightCardProps) {
+export function FlightCard({ data, className, ...props }: FlightCardProps) {
   return (
     <Card className={cn('w-auto', className)} {...props}>
       {/* <CardHeader>
