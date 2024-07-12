@@ -88,7 +88,12 @@ export default function FlightsList() {
       );
     });
 
-    return <div className="sm:hidden flex flex-col gap-2 p-4">{cardsList}</div>;
+    return (
+      <div className="sm:hidden flex flex-col gap-2 p-4">
+        {cardsList}
+        <DataTablePagination table={table} />
+      </div>
+    );
   };
 
   // NOTE: Docs user isPending instead of isLoading for paginated fetch

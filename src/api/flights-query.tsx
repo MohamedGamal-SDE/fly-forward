@@ -50,23 +50,18 @@ export const fetchFlightPhoto = async (flightId: string): Promise<Blob | null> =
       responseType: 'blob',
     });
 
-    console.log('👀 ~ fetchFlightPhoto ~ response:', response);
-
-    // Check the Content-Type header for the type of response
+    //DEV: Check the Content-Type header for the type of response
     if (response.headers['content-type']?.includes('application/json')) {
-      // Convert the Blob to text and then parse it as JSON
+      //DEV: Convert the Blob to text and then parse it as JSON
       const errorText = await response.data.text();
-      console.log('🪢 ~ fetchFlightPhoto ~ errorText:', errorText);
       const errorObj = JSON.parse(errorText);
-      console.log('🪢 ~ fetchFlightPhoto ~ errorObj:', errorObj);
       throw new Error(errorObj);
     }
 
     return response.data;
   } catch (error) {
-    console.log('CATCH ERROR RUNNING');
     // // DEV:RMV: For dev debug purpose only!!!
-    console.warn('❌ Error Fetching Flight photo:', error);
+    // console.warn('❌ Error Fetching Flight photo:', error);
     return null;
   }
 };

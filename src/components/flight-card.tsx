@@ -18,7 +18,7 @@ export function FlightCard({ data, className, ...props }: FlightCardProps) {
       <CardContent className="grid gap-4">
         <div className="text-blue-600"> Capacity: {data.capacity}</div>
       </CardContent>
-      <CardFooter>{<ImageDialog flightId="flightId" />}</CardFooter>
+      <CardFooter>{<ImageDialog flightId={data.id} />}</CardFooter>
     </Card>
   );
 }
