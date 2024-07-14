@@ -49,9 +49,9 @@ export const flightListTableColumns = (handleDeleteFlight: (id: string) => void)
       cell: ({ row }) => {
         const id = row.original.id;
         return (
-          <div className="flex justify-center items-center space-x-2 w-12">
-            <Button onClick={() => handleDeleteFlight(id)}>
-              <Trash2 size={'1rem'} />
+          <div className="flex justify-center items-center w-8">
+            <Button onClick={() => handleDeleteFlight(id)} variant="destructive" className="text-base">
+              <Trash2 />
             </Button>
           </div>
         );
