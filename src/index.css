@@ -74,3 +74,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes progress-bar {
+  0% {
+    left: -50%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.animate-progress-bar {
+  animation: progress-bar 1.5s linear infinite;
+}

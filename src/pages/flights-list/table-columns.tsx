@@ -2,6 +2,7 @@ import { ColumnDef } from '@tanstack/react-table';
 
 import { Flight } from '@/models';
 import ImageDialog from '@/components/image-dialog';
+import { InfiniteProgressBar } from '@/components/infinite-progress-bar';
 
 export const flightListTableColumns: ColumnDef<Flight>[] = [
   {
@@ -22,7 +23,14 @@ export const flightListTableColumns: ColumnDef<Flight>[] = [
       return <div className="font-bold">{localDate}</div>;
     },
   },
-  // TODO: Add actions menu for edit and delete
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    cell: ({ row }) => {
+      const status = row.original.status;
+      return status === 'processing' ? <InfiniteProgressBar /> : <p>{status}</p>;
+    },
+  },
   {
     id: 'photo',
     header: 'Photo',
@@ -31,4 +39,5 @@ export const flightListTableColumns: ColumnDef<Flight>[] = [
       return <ImageDialog flightId={id} />;
     },
   },
+  // TODO: Add actions menu for edit and delete.
 ];
