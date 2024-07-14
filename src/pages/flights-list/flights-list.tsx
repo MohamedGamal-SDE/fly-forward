@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getRouteApi } from '@tanstack/react-router';
 import { useReactTable, getCoreRowModel, Table, PaginationState } from '@tanstack/react-table';
 
 import { DataTable, DataTablePagination } from '@/components';
 import { Flight } from '@/models';
 import { flightListTableColumns } from './table-columns';
-import { useFetchPaginatedFlights } from '@/hooks';
+import { useDeleteFlight, useFetchPaginatedFlights } from '@/hooks';
 import { FlightCard } from '@/components/flight-card';
 
 const route = getRouteApi('/flights');
@@ -24,25 +24,21 @@ export default function FlightsList() {
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex, pageSize });
 
-  useEffect(() => {
-    if (isNaN(pagination.pageIndex) || isNaN(pagination.pageSize) || pagination.pageIndex < 0 || pagination.pageSize < 1) {
-      navigate({
-        to: '/bad-request',
-      });
-    } else {
-      navigate({
-        to: '/flights',
-        search: { page: pagination.pageIndex + 1, size: pagination.pageSize },
-      });
-    }
-  }, [pagination, navigate]);
-
   const { data: flightsData, error, isPending, isFetching } = useFetchPaginatedFlights(pagination);
+
+  const deleteFlightMutation = useDeleteFlight();
+
+  const handleDeleteFlight = useCallback(
+    (id: string) => {
+      deleteFlightMutation.mutate(id);
+    },
+    [deleteFlightMutation]
+  );
 
   const { resources: flightsList } = flightsData ?? {};
 
   // DEV: Table setup
-  const optimizedColumns = useMemo(() => flightListTableColumns, []);
+  const optimizedColumns = useMemo(() => flightListTableColumns(handleDeleteFlight), [handleDeleteFlight]);
   const defaultData = useMemo(() => [], []);
 
   const table: Table<Flight> = useReactTable({
@@ -67,6 +63,19 @@ export default function FlightsList() {
   //     });
   //   }
   // }, [data, isPlaceholderData, page, queryClient]);
+
+  useEffect(() => {
+    if (isNaN(pagination.pageIndex) || isNaN(pagination.pageSize) || pagination.pageIndex < 0 || pagination.pageSize < 1) {
+      navigate({
+        to: '/bad-request',
+      });
+    } else {
+      navigate({
+        to: '/flights',
+        search: { page: pagination.pageIndex + 1, size: pagination.pageSize },
+      });
+    }
+  }, [pagination, navigate]);
 
   // NOTE: Mobile view start from 0 to (sm: = 640px)
   const renderTableView = () => {
