@@ -7,6 +7,7 @@ import { Flight } from '@/models';
 import { flightListTableColumns } from './table-columns';
 import { useDeleteFlight, useFetchPaginatedFlights } from '@/hooks';
 import { FlightCard } from '@/components/flight-card';
+import Spinner from '@/components/spinner';
 
 const route = getRouteApi('/flights');
 
@@ -106,7 +107,12 @@ export default function FlightsList() {
   };
 
   // NOTE: Docs user isPending instead of isLoading for paginated fetch
-  if (isPending) return <div>Loading...</div>;
+  if (isPending)
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
   if (isFetching) return <div>Fetching...</div>;
 
   if (error) return <div>Something went wrong, please try again later</div>;
