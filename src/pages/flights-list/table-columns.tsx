@@ -1,10 +1,10 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Trash2 } from 'lucide-react';
-import { Button } from '@/shadcn';
 
-import { Flight } from '@/models';
+import { ButtonVariant, Flight } from '@/models';
 import ImageDialog from '@/components/image-dialog';
 import { InfiniteProgressBar } from '@/components/infinite-progress-bar';
+import ConfirmationModal from '@/components/confirmation-modal';
 
 export const flightListTableColumns = (handleDeleteFlight: (id: string) => void): ColumnDef<Flight>[] => {
   return [
@@ -42,7 +42,6 @@ export const flightListTableColumns = (handleDeleteFlight: (id: string) => void)
         return <ImageDialog flightId={id} />;
       },
     },
-    // TODO: Add actions menu for edit and delete.
     {
       id: 'actions',
       header: '',
@@ -50,9 +49,12 @@ export const flightListTableColumns = (handleDeleteFlight: (id: string) => void)
         const id = row.original.id;
         return (
           <div className="flex justify-center items-center w-8">
-            <Button onClick={() => handleDeleteFlight(id)} variant="destructive" className="text-base">
-              <Trash2 />
-            </Button>
+            <ConfirmationModal
+              triggerLabel={<Trash2 />}
+              triggerVariant={ButtonVariant.Destructive}
+              confirmVariant={ButtonVariant.Destructive}
+              onConfirm={() => handleDeleteFlight(id)}
+            />
           </div>
         );
       },

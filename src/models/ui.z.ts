@@ -10,7 +10,7 @@ export enum ButtonVariant {
 }
 
 export interface ConfirmationModalProps {
-  triggerLabel?: string;
+  triggerLabel?: string | JSX.Element;
   triggerClass?: string;
   triggerVariant?: ButtonVariant;
   containerClass?: string;
@@ -19,11 +19,11 @@ export interface ConfirmationModalProps {
   contentClass?: string;
   contentMessage?: string;
   footerClass?: string;
-  cancelLabel?: string;
+  cancelLabel?: string | JSX.Element;
   cancelClass?: string;
   cancelVariant?: ButtonVariant;
   onCancel?: () => void;
-  confirmLabel?: string;
+  confirmLabel?: string | JSX.Element;
   confirmClass?: string;
   confirmVariant?: ButtonVariant;
   onConfirm?: () => void;
