@@ -2,3 +2,4 @@
 export * from './flights.z';
 export * from './table.models';
 export * from './user.models';
+export * from './ui.z';
