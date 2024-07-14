@@ -1,10 +1,10 @@
 import axios from 'axios';
 
 import { Flight, FlightPaginatedFetchProps, FlightsResponse } from '@/models';
-import { generateRandomFlight } from '@/utilities';
 
 const apiUrl = `${import.meta.env.VITE_API_URL}/flights`;
 
+// DEV: Reading queries
 export const fetchAllFlights = async (): Promise<Flight[]> => {
   try {
     // TODO: Implement dynamic size and page setup
@@ -66,12 +66,7 @@ export const fetchFlightPhoto = async (flightId: string): Promise<Blob | null> =
   }
 };
 
-export const createMockFlightItem = async (flightsList: Flight[]) => {
-  const mockFlight = await axios.post<Flight>(apiUrl, generateRandomFlight(flightsList));
-
-  return mockFlight;
-};
-
+// DEV: Create queries
 export const createFlight = async (flight: FormData): Promise<Flight> => {
   try {
     const response = await axios.post<Flight>(`${apiUrl}/withPhoto`, flight);
@@ -81,5 +76,17 @@ export const createFlight = async (flight: FormData): Promise<Flight> => {
     // DEV:RMV: For dev debug purpose only!!!
     console.warn('❌ Error creating flight:', error);
     throw error;
+  }
+};
+
+// DEV: Delete queries
+export const deleteFlight = async (flightId: string) => {
+  try {
+    const response = await axios.delete(`${apiUrl}/${flightId}`);
+    return response;
+  } catch (err) {
+    // DEV:RMV: For dev debug purpose only!!!
+    console.warn('❌ Error deleting flight:', err);
+    return;
   }
 };
