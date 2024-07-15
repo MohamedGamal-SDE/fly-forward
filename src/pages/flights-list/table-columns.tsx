@@ -27,7 +27,7 @@ export const flightListTableColumns = (handleDeleteFlight: (id: string) => void)
       },
     },
     {
-      accessorKey: 'status',
+      id: 'status',
       header: 'Status',
       cell: ({ row }) => {
         const status = row.original.status;

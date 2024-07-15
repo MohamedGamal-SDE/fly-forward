@@ -30,6 +30,10 @@ export const flightsResponseSchema = z.object({
 export const flightPaginatedFetchPropsSchema = z.object({
   page: z.number().int('Page must be an integer.').min(1, 'Page must be at least 1.'),
   pageSize: z.number().int('Page size must be an integer.').min(1, 'Page size must be at least 1.'),
+  code: z
+    .string()
+    .regex(/^[a-zA-Z]+$/, 'Code must contain only letters (a-z, A-Z).')
+    .optional(),
 });
 
 // Extract TypeScript Types

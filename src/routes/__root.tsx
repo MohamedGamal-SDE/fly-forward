@@ -8,7 +8,10 @@ export const Route = createRootRoute({
         <Link to="/" className="[&.active]:font-bold">
           Home
         </Link>{' '}
-        <Link to="/flights" className="[&.active]:font-bold" search={(params) => ({ ...params, page: params.page || 1, size: params.size || 10 })}>
+        <Link
+          to="/flights"
+          className="[&.active]:font-bold"
+          search={(params) => ({ ...params, page: params.page || 1, size: params.size || 10, code: params.code || '' })}>
           Flights
         </Link>{' '}
         <Link to="/add-flight" className="[&.active]:font-bold">
