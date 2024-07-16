@@ -24,6 +24,7 @@ export default function FlightsList() {
 
   const [searchTerm, setSearchTerm] = useState<FlightSearch>(searchCode);
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex, pageSize });
+  const [isInputValid, setIsInputValid] = useState(true);
 
   const { data: flightsData, error, isPending, isFetching } = useFetchPaginatedFlights(pagination, searchCode);
 
@@ -39,10 +40,10 @@ export default function FlightsList() {
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSearchTerm(value);
-    setPagination({ ...pagination, pageIndex: 0 }); // Reset to first page on search
+    setPagination({ ...pagination, pageIndex: 0 }); //NOTE:DEV: Reset to first page on search
     navigate({
       to: '/flights',
-      search: { page: 1, size: pagination.pageSize, code: value || undefined },
+      search: { page: 1, size: pagination.pageSize, code: (isInputValid && value) || undefined },
     });
   };
 
@@ -53,7 +54,7 @@ export default function FlightsList() {
   const defaultData = useMemo(() => [], []);
 
   const table: Table<Flight> = useReactTable({
-    data: flightsList || defaultData,
+    data: isInputValid ? flightsList || defaultData : defaultData,
     columns: optimizedColumns,
     getCoreRowModel: getCoreRowModel(),
     // getPaginationRowModel: getPaginationRowModel(),
@@ -132,7 +133,14 @@ export default function FlightsList() {
   return (
     <div>
       <div className="flex w-full bg-slate-600 p-8">
-        <SingleInputForm schema={flightSearchSchema} name="code" placeholder="Enter flight code" defaultValues={{ code: searchTerm }} onChange={handleSearch} />
+        <SingleInputForm
+          schema={flightSearchSchema}
+          name="code"
+          placeholder="Enter flight code"
+          defaultValues={{ code: searchTerm }}
+          onChange={handleSearch}
+          setIsInputValid={setIsInputValid}
+        />
       </div>
       {renderTableView()}
       {renderCardView()}
