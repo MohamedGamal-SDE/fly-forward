@@ -16,6 +16,7 @@ import { Route as FlightsImport } from './routes/flights'
 import { Route as BadRequestImport } from './routes/bad-request'
 import { Route as AddFlightImport } from './routes/add-flight'
 import { Route as IndexImport } from './routes/index'
+import { Route as EditFlightIdImport } from './routes/edit-flight.$id'
 
 // Create/Update Routes
 
@@ -41,6 +42,11 @@ const AddFlightRoute = AddFlightImport.update({
 
 const IndexRoute = IndexImport.update({
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const EditFlightIdRoute = EditFlightIdImport.update({
+  path: '/edit-flight/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -83,6 +89,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotFoundImport
       parentRoute: typeof rootRoute
     }
+    '/edit-flight/$id': {
+      id: '/edit-flight/$id'
+      path: '/edit-flight/$id'
+      fullPath: '/edit-flight/$id'
+      preLoaderRoute: typeof EditFlightIdImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -94,6 +107,7 @@ export const routeTree = rootRoute.addChildren({
   BadRequestRoute,
   FlightsRoute,
   NotFoundRoute,
+  EditFlightIdRoute,
 })
 
 /* prettier-ignore-end */
@@ -108,7 +122,8 @@ export const routeTree = rootRoute.addChildren({
         "/add-flight",
         "/bad-request",
         "/flights",
-        "/not-found"
+        "/not-found",
+        "/edit-flight/$id"
       ]
     },
     "/": {
@@ -125,6 +140,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/not-found": {
       "filePath": "not-found.tsx"
+    },
+    "/edit-flight/$id": {
+      "filePath": "edit-flight.$id.tsx"
     }
   }
 }
