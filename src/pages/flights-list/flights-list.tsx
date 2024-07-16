@@ -2,13 +2,10 @@ import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { getRouteApi } from '@tanstack/react-router';
 import { useReactTable, getCoreRowModel, Table, PaginationState, getFilteredRowModel } from '@tanstack/react-table';
 
-import { DataTable, DataTablePagination } from '@/components';
-import { Flight } from '@/models';
+import { DataTable, DataTablePagination, SingleInputForm, Spinner, FlightCard } from '@/components';
+import { Flight, FlightSearch, flightSearchSchema } from '@/models';
 import { flightListTableColumns } from './table-columns';
 import { useDeleteFlight, useFetchPaginatedFlights } from '@/hooks';
-import { FlightCard } from '@/components/flight-card';
-import Spinner from '@/components/spinner';
-import { Input } from '@/shadcn';
 
 const route = getRouteApi('/flights');
 
@@ -25,7 +22,7 @@ export default function FlightsList() {
   const pageSize = queryParams.size;
   const searchCode = queryParams.code || '';
 
-  const [searchTerm, setSearchTerm] = useState(searchCode);
+  const [searchTerm, setSearchTerm] = useState<FlightSearch>(searchCode);
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex, pageSize });
 
   const { data: flightsData, error, isPending, isFetching } = useFetchPaginatedFlights(pagination, searchCode);
@@ -135,7 +132,7 @@ export default function FlightsList() {
   return (
     <div>
       <div className="flex w-full bg-slate-600 p-8">
-        <Input placeholder="Enter flight code." value={searchTerm} onChange={handleSearch} />
+        <SingleInputForm schema={flightSearchSchema} name="code" placeholder="Enter flight code" defaultValues={{ code: searchTerm }} onChange={handleSearch} />
       </div>
       {renderTableView()}
       {renderCardView()}
