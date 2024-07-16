@@ -12,5 +12,17 @@ const flightQueryParamsSchema = z.object({
 
 export const Route = createFileRoute('/flights')({
   component: FlightsList,
-  validateSearch: (queryParams) => flightQueryParamsSchema.parse(queryParams),
+  validateSearch: (queryParams) => {
+    try {
+      return flightQueryParamsSchema.parse(queryParams);
+    } catch (e) {
+      // console.log('❌❌❌❌ ~ Route ~ e:', e);
+      // Redirect to a bad request page or handle error
+      return { page: 1, size: 10, code: undefined };
+      // throw e;
+    }
+  },
+  // validateSearch: (queryParams) => {
+  //   return flightQueryParamsSchema.parse(queryParams);
+  // },
 });

@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { Dispatch, ReactNode, SetStateAction } from 'react';
 import { DefaultValues, Path } from 'react-hook-form';
 import { ZodSchema } from 'zod';
 
@@ -42,4 +42,5 @@ export interface SingleInputFormProps<T> {
   onSubmit?: (data: T) => void;
   className?: string;
   defaultValues?: DefaultValues<T>;
+  setIsInputValid: Dispatch<SetStateAction<boolean>>;
 }

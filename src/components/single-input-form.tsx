@@ -5,7 +5,7 @@ import { FieldValues, useForm } from 'react-hook-form';
 import { ZodError } from 'zod';
 
 export function SingleInputForm<T extends FieldValues>(props: SingleInputFormProps<T>) {
-  const { schema, defaultValues, onSubmit, name, placeholder, label, onChange, className } = props;
+  const { schema, defaultValues, onSubmit, name, placeholder, label, onChange, className, setIsInputValid } = props;
 
   const form = useForm<T>({
     resolver: zodResolver(schema),
@@ -22,10 +22,12 @@ export function SingleInputForm<T extends FieldValues>(props: SingleInputFormPro
 
     if (validationResult.success) {
       form.clearErrors(name);
+      setIsInputValid(true);
       onChange?.(e);
     } else {
       const zodError = validationResult.error as ZodError<T>;
       const errorMessage = zodError.errors[0]?.message || 'Invalid input';
+      setIsInputValid(false);
       form.setError(name, { message: errorMessage });
     }
   };
