@@ -29,11 +29,12 @@ export const flightsResponseSchema = z.object({
 
 export const flightSearchCodeSchema = z
   .string()
-  .optional()
+  .max(6, 'Code maximum 6 characters long.')
   .or(z.literal(''))
   .refine((val) => val === undefined || /^[a-zA-Z]*$/.test(val), {
     message: 'Code must contain only letters (a-z, A-Z).',
-  });
+  })
+  .optional();
 
 export const flightSearchSchema = z.object({
   code: flightSearchCodeSchema,
