@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/shadcn/components/ui/card';
 import { cn } from '@/shadcn/lib/utils';
 import { Flight } from '@/models';
-import ImageDialog from './image-dialog';
+import { ImageDialog } from '@/components';
 
 export interface FlightCardProps {
   data: Flight;

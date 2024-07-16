@@ -1,13 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { getRouteApi } from '@tanstack/react-router';
-import { useReactTable, getCoreRowModel, Table, PaginationState } from '@tanstack/react-table';
+import { useReactTable, getCoreRowModel, Table, PaginationState, getFilteredRowModel } from '@tanstack/react-table';
 
-import { DataTable, DataTablePagination } from '@/components';
-import { Flight } from '@/models';
+import { DataTable, DataTablePagination, SingleInputForm, Spinner, FlightCard } from '@/components';
+import { Flight, FlightSearch, flightSearchSchema } from '@/models';
 import { flightListTableColumns } from './table-columns';
 import { useDeleteFlight, useFetchPaginatedFlights } from '@/hooks';
-import { FlightCard } from '@/components/flight-card';
-import Spinner from '@/components/spinner';
 
 const route = getRouteApi('/flights');
 
@@ -22,10 +20,12 @@ export default function FlightsList() {
 
   const pageIndex = queryParams.page - 1;
   const pageSize = queryParams.size;
+  const searchCode = queryParams.code || '';
 
+  const [searchTerm, setSearchTerm] = useState<FlightSearch>(searchCode);
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex, pageSize });
 
-  const { data: flightsData, error, isPending, isFetching } = useFetchPaginatedFlights(pagination);
+  const { data: flightsData, error, isPending, isFetching } = useFetchPaginatedFlights(pagination, searchCode);
 
   const deleteFlightMutation = useDeleteFlight();
 
@@ -35,6 +35,16 @@ export default function FlightsList() {
     },
     [deleteFlightMutation]
   );
+
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setSearchTerm(value);
+    setPagination({ ...pagination, pageIndex: 0 }); // Reset to first page on search
+    navigate({
+      to: '/flights',
+      search: { page: 1, size: pagination.pageSize, code: value || undefined },
+    });
+  };
 
   const { resources: flightsList } = flightsData ?? {};
 
@@ -50,8 +60,10 @@ export default function FlightsList() {
     // debugTable: true,
     manualPagination: true,
     pageCount: Math.ceil((flightsData?.total || 0) / pagination.pageSize), // Calculate the total number of pages
-    state: { pagination },
+    state: { pagination, globalFilter: searchTerm },
     onPaginationChange: setPagination,
+    onGlobalFilterChange: setSearchTerm,
+    getFilteredRowModel: getFilteredRowModel(),
   });
 
   // DEV:IDEA:
@@ -73,10 +85,10 @@ export default function FlightsList() {
     } else {
       navigate({
         to: '/flights',
-        search: { page: pagination.pageIndex + 1, size: pagination.pageSize },
+        search: { page: pagination.pageIndex + 1, size: pagination.pageSize, code: searchTerm || undefined },
       });
     }
-  }, [pagination, navigate]);
+  }, [pagination, navigate, searchTerm]);
 
   // NOTE: Mobile view start from 0 to (sm: = 640px)
   const renderTableView = () => {
@@ -119,6 +131,9 @@ export default function FlightsList() {
 
   return (
     <div>
+      <div className="flex w-full bg-slate-600 p-8">
+        <SingleInputForm schema={flightSearchSchema} name="code" placeholder="Enter flight code" defaultValues={{ code: searchTerm }} onChange={handleSearch} />
+      </div>
       {renderTableView()}
       {renderCardView()}
     </div>

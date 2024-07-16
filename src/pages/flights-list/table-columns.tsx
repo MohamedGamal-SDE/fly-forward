@@ -2,9 +2,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Trash2 } from 'lucide-react';
 
 import { ButtonVariant, Flight } from '@/models';
-import ImageDialog from '@/components/image-dialog';
-import { InfiniteProgressBar } from '@/components/infinite-progress-bar';
-import ConfirmationModal from '@/components/confirmation-modal';
+import { ConfirmationModal, InfiniteProgressBar, ImageDialog } from '@/components';
 
 export const flightListTableColumns = (handleDeleteFlight: (id: string) => void): ColumnDef<Flight>[] => {
   return [
@@ -27,7 +25,7 @@ export const flightListTableColumns = (handleDeleteFlight: (id: string) => void)
       },
     },
     {
-      accessorKey: 'status',
+      id: 'status',
       header: 'Status',
       cell: ({ row }) => {
         const status = row.original.status;

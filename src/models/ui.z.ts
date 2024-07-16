@@ -1,4 +1,6 @@
 import { ReactNode } from 'react';
+import { DefaultValues, Path } from 'react-hook-form';
+import { ZodSchema } from 'zod';
 
 export enum ButtonVariant {
   Default = 'default',
@@ -28,4 +30,16 @@ export interface ConfirmationModalProps {
   confirmVariant?: ButtonVariant;
   onConfirm?: () => void;
   children?: ReactNode;
+}
+
+export interface SingleInputFormProps<T> {
+  // form: UseFormReturn<T, unknown>;
+  schema: ZodSchema<T>;
+  name: Path<T>;
+  placeholder?: string;
+  label?: string;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onSubmit?: (data: T) => void;
+  className?: string;
+  defaultValues?: DefaultValues<T>;
 }

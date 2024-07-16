@@ -19,7 +19,7 @@ export const fetchAllFlights = async (): Promise<Flight[]> => {
 };
 
 export const fetchPaginatedFlights = async (queryParams: FlightPaginatedFetchProps): Promise<FlightsResponse> => {
-  const { page, pageSize } = queryParams;
+  const { page, pageSize, code } = queryParams;
 
   try {
     // await new Promise((r) => setTimeout(r, 500)); // RMV:
@@ -28,6 +28,7 @@ export const fetchPaginatedFlights = async (queryParams: FlightPaginatedFetchPro
       params: {
         page,
         size: pageSize,
+        code: code || undefined,
       },
     });
 

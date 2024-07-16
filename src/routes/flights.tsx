@@ -1,19 +1,16 @@
 import { createFileRoute } from '@tanstack/react-router';
 
 import FlightsList from '@/pages/flights-list/flights-list';
+import { z } from 'zod';
+import { flightSearchCodeSchema } from '@/models';
 
-type FlightsQueryParams = {
-  page: number;
-  size: number;
-};
+const flightQueryParamsSchema = z.object({
+  page: z.number().int().default(1),
+  size: z.number().int().default(10),
+  code: flightSearchCodeSchema,
+});
 
 export const Route = createFileRoute('/flights')({
   component: FlightsList,
-  // TODO: Try out https://zod.dev/ typing
-  validateSearch: (search: Record<string, unknown>): FlightsQueryParams => {
-    const page = Number(search?.page ?? 1);
-    const size = Number(search?.size ?? 10);
-
-    return { page, size };
-  },
+  validateSearch: (queryParams) => flightQueryParamsSchema.parse(queryParams),
 });

@@ -27,9 +27,22 @@ export const flightsResponseSchema = z.object({
   total: z.number().int('Total must be an integer.').nonnegative('Total must be zero or positive.'),
 });
 
+export const flightSearchCodeSchema = z
+  .string()
+  .optional()
+  .or(z.literal(''))
+  .refine((val) => val === undefined || /^[a-zA-Z]*$/.test(val), {
+    message: 'Code must contain only letters (a-z, A-Z).',
+  });
+
+export const flightSearchSchema = z.object({
+  code: flightSearchCodeSchema,
+});
+
 export const flightPaginatedFetchPropsSchema = z.object({
   page: z.number().int('Page must be an integer.').min(1, 'Page must be at least 1.'),
   pageSize: z.number().int('Page size must be an integer.').min(1, 'Page size must be at least 1.'),
+  code: flightSearchCodeSchema,
 });
 
 // Extract TypeScript Types
@@ -37,6 +50,7 @@ export type FlightRequest = z.infer<typeof flightRequestSchema>;
 export type Flight = z.infer<typeof flightSchema>;
 export type FlightsResponse = z.infer<typeof flightsResponseSchema>;
 export type FlightPaginatedFetchProps = z.infer<typeof flightPaginatedFetchPropsSchema>;
+export type FlightSearch = z.infer<typeof flightSearchCodeSchema>;
 
 // Define the FlightStatus Enum for TypeScript
 export enum FlightStatus {

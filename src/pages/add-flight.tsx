@@ -8,7 +8,7 @@ import { FlightRequest, flightRequestSchema } from '@/models';
 import { Button, Input, Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shadcn/components';
 import { useCreateFlightMutation, useFetchFlights } from '@/hooks';
 import { isCodeUnique } from '@/utilities';
-import Spinner from '@/components/spinner';
+import { Spinner } from '@/components';
 
 export default function AddFlight() {
   const { data: flightsList, isFetched, isError: isFetchingFlightsError } = useFetchFlights();
