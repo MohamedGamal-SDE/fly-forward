@@ -11,7 +11,7 @@ export const Route = createRootRoute({
         <Link
           to="/flights"
           className="[&.active]:font-bold"
-          search={(params) => ({ ...params, page: params.page || 1, size: params.size || 10, code: params.code || '' })}>
+          search={(params) => ({ ...params, page: params.page || 1, size: params.size || 10, code: params.code || undefined })}>
           Flights
         </Link>{' '}
         <Link to="/add-flight" className="[&.active]:font-bold">

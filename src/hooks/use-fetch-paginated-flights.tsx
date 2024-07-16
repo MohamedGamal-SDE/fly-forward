@@ -1,12 +1,12 @@
 import { fetchPaginatedFlights } from '@/api';
-import { FlightsResponse } from '@/models';
+import { FlightSearch, FlightsResponse } from '@/models';
 import { UseQueryOptions, keepPreviousData, useQuery } from '@tanstack/react-query';
 import { PaginationState } from '@tanstack/react-table';
 
 const FLIGHTS_QUERY_KEY = 'flights';
 
 // CHK:FIXME:  code: string use zod typing
-export function useFetchPaginatedFlights(pagination: PaginationState, code: string, options?: UseQueryOptions<FlightsResponse, Error>) {
+export function useFetchPaginatedFlights(pagination: PaginationState, code: FlightSearch, options?: UseQueryOptions<FlightsResponse, Error>) {
   return useQuery<FlightsResponse, Error>({
     queryKey: [FLIGHTS_QUERY_KEY, pagination],
     queryFn: () => fetchPaginatedFlights({ page: pagination.pageIndex + 1, pageSize: pagination.pageSize, code }),
