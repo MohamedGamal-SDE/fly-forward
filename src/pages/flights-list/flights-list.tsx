@@ -6,6 +6,7 @@ import { DataTable, DataTablePagination, SingleInputForm, Spinner, FlightCard } 
 import { Flight, FlightSearch, flightSearchSchema } from '@/models';
 import { flightListTableColumns } from './table-columns';
 import { useDeleteFlight, useFetchPaginatedFlights } from '@/hooks';
+import { useDebounce } from '@/hooks/use-debounce';
 
 const route = getRouteApi('/flights');
 
@@ -26,7 +27,9 @@ export default function FlightsList() {
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex, pageSize });
   const [isInputValid, setIsInputValid] = useState(true);
 
-  const { data: flightsData, error, isPending, isFetching } = useFetchPaginatedFlights(pagination, searchCode);
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
+  const { data: flightsData, error, isPending, isFetching } = useFetchPaginatedFlights(pagination, debouncedSearchTerm);
 
   const deleteFlightMutation = useDeleteFlight();
 
