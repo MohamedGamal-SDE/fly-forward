@@ -56,6 +56,7 @@ export default function UpdateFlight() {
 
     if (flight?.code !== newCode && !isCodeUnique(newCode, flightsList ?? [])) {
       form.setError('code', { type: 'manual', message: 'The flight code is already in use. Please choose a different code.' });
+      setIsSubmitting(false);
       return;
     }
 
@@ -73,13 +74,13 @@ export default function UpdateFlight() {
           navigate({ to: '/flights', search: (params) => ({ ...params, page: params.page || 1, size: params.size || 10 }) });
         },
         onError: (error) => {
+          console.log('isSubmitting', isSubmitting);
           if (axios.isAxiosError(error)) {
             if (error.response?.data.code === 106) {
               // DEV: Set a form error for the code field to notify about duplicate entry.
               form.setError('code', { type: 'manual', message: 'The flight code is already in use. Please choose a different code.' });
             }
           }
-          setIsSubmitting(false);
         },
         onSettled: () => {
           setIsSubmitting(false);

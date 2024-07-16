@@ -73,6 +73,7 @@ export default function AddFlight() {
 
     if (!isCodeUnique(values.code, flightsList ?? [])) {
       form.setError('code', { type: 'manual', message: 'The flight code is already in use. Please choose a different code.' });
+      setIsSubmitting(false);
       return;
     }
 
