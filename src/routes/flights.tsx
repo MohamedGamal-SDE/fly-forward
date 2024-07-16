@@ -16,13 +16,10 @@ export const Route = createFileRoute('/flights')({
     try {
       return flightQueryParamsSchema.parse(queryParams);
     } catch (e) {
-      // console.log('❌❌❌❌ ~ Route ~ e:', e);
-      // Redirect to a bad request page or handle error
-      return { page: 1, size: 10, code: undefined };
+      // console.log('❌~ Route ~ e:', e);
+      // TODO: Redirect to a bad request page or handle error
       // throw e;
+      return { page: 1, size: 10, code: undefined };
     }
   },
-  // validateSearch: (queryParams) => {
-  //   return flightQueryParamsSchema.parse(queryParams);
-  // },
 });

@@ -1,8 +1,9 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { Trash2 } from 'lucide-react';
+import { FilePenLine, Trash2 } from 'lucide-react';
 
 import { ButtonVariant, Flight } from '@/models';
 import { ConfirmationModal, InfiniteProgressBar, ImageDialog } from '@/components';
+import { Link } from '@tanstack/react-router';
 
 export const flightListTableColumns = (handleDeleteFlight: (id: string) => void): ColumnDef<Flight>[] => {
   return [
@@ -46,13 +47,20 @@ export const flightListTableColumns = (handleDeleteFlight: (id: string) => void)
       cell: ({ row }) => {
         const id = row.original.id;
         return (
-          <div className="flex justify-center items-center w-8">
+          <div className="flex justify-center items-center w-8 space-x-2">
             <ConfirmationModal
               triggerLabel={<Trash2 />}
               triggerVariant={ButtonVariant.Destructive}
               confirmVariant={ButtonVariant.Destructive}
               onConfirm={() => handleDeleteFlight(id)}
             />
+
+            <Link
+              to={'/edit-flight/$id'}
+              params={{ id }}
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-500 text-blue-500 hover:bg-blue-400/90 h-10 px-4 py-2">
+              <FilePenLine className="text-white" />
+            </Link>
           </div>
         );
       },

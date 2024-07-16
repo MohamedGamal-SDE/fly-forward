@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { Flight, FlightPaginatedFetchProps, FlightsResponse } from '@/models';
+import { Flight, FlightPaginatedFetchProps, FlightRequest, FlightsResponse } from '@/models';
 
 const apiUrl = `${import.meta.env.VITE_API_URL}/flights`;
 
@@ -67,6 +67,20 @@ export const fetchFlightPhoto = async (flightId: string): Promise<Blob | null> =
   }
 };
 
+export const fetchFlightById = async (flightId: string): Promise<Flight> => {
+  try {
+    // TODO: Implement dynamic size and page setup
+    const response = await axios.get<Flight>(`${apiUrl}/${flightId}/details`);
+    console.log('🚀 ~ fetchFlightById ~ response.data:', response.data);
+
+    return response.data;
+  } catch (error) {
+    // // DEV:RMV: For dev debug purpose only!!!
+    // console.warn('❌ Error Fetching Flight photo:', error);
+    return {} as Flight;
+  }
+};
+
 // DEV: Create queries
 export const createFlight = async (flight: FormData): Promise<Flight> => {
   try {
@@ -77,6 +91,19 @@ export const createFlight = async (flight: FormData): Promise<Flight> => {
     // DEV:RMV: For dev debug purpose only!!!
     console.warn('❌ Error creating flight:', error);
     throw error;
+  }
+};
+
+// DEV: Edit queries
+export const updateFlight = async (flight: FlightRequest, flightId: string): Promise<Flight> => {
+  try {
+    const response = await axios.put<Flight>(`${apiUrl}/${flightId}`, flight);
+    return response.data;
+  } catch (error) {
+    // DEV:RMV: For dev debug purpose only!!!
+    console.warn('❌ Error Updating flight:', error);
+    // throw error;
+    return {} as Flight;
   }
 };
 
