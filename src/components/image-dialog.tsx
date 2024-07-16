@@ -10,7 +10,7 @@ type ImageDialogProps = {
   flightId: string;
 };
 
-const ImageDialog: React.FC<ImageDialogProps> = ({ flightId }) => {
+export const ImageDialog: React.FC<ImageDialogProps> = ({ flightId }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>('');
 
@@ -59,5 +59,3 @@ const ImageDialog: React.FC<ImageDialogProps> = ({ flightId }) => {
     </Dialog>
   );
 };
-
-export default ImageDialog;

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, DialogHeader, DialogFooter, Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from '@/shadcn';
 import { ConfirmationModalProps } from '@/models';
 
-export default function ConfirmationModal(props: ConfirmationModalProps) {
+export function ConfirmationModal(props: ConfirmationModalProps) {
   const {
     triggerLabel,
     triggerClass = '',
