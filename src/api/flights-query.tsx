@@ -107,6 +107,18 @@ export const updateFlight = async (flight: FlightRequest, flightId: string): Pro
   }
 };
 
+export const updateFlightWithPhoto = async (flight: FormData, flightId: string): Promise<Flight> => {
+  try {
+    const response = await axios.put<Flight>(`${apiUrl}/${flightId}/withPhoto`, flight);
+    return response.data;
+  } catch (error) {
+    // DEV:RMV: For dev debug purpose only!!!
+    console.warn('❌ Error Updating flight:', error);
+    // throw error;
+    return {} as Flight;
+  }
+};
+
 // DEV: Delete queries
 export const deleteFlight = async (flightId: string) => {
   try {
